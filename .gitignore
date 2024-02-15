@@ -22,3 +22,8 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+ArgonLexer/build/built-jar.properties
+ArgonLexer/dist/input.txt
+ArgonLexer/dist/README.TXT
+ArgonLexer/nbproject/private/private.properties
+ArgonLexer/nbproject/private/private.xml
