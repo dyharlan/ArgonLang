@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * TODO: Finish DFA for print statement
+ *
  * @author dyhar
  */
 enum State {
@@ -39,12 +40,12 @@ enum State {
     I,
     N,
     T,
-    PLCOMMA,
-    PRCOMMA,
+    POPENPAR,
+    PCLOSEPAR,
     PCONTENT,
     PQUOT,
     PACCEPT,
-    
+
 }
 
 enum Token {
@@ -309,12 +310,11 @@ public class Lexer {
                                 switch (s) {
                                     case START: //start state of literals
                                         //check if it is a number
-                                        if (tempStr.charAt(c) == '0' && s == State.START) {
+                                        if (tempStr.charAt(c) == '0') {
                                             s = State.NACCEPT2;
                                         } else if (tempStr.charAt(c) >= '1' && tempStr.charAt(c) <= '9') {
                                             s = State.NACCEPT1;
-                                        }
-                                        if(str.charAt(c) == 'p'){
+                                        } else if (str.charAt(c) == 'p') {
                                             s = State.P;
                                         } else if (str.charAt(c) == '_') {
                                             s = State.CFGHJLO;
@@ -449,88 +449,123 @@ public class Lexer {
                                         }
                                         break;
                                     case P:
-                                        if(str.charAt(c) >= 'r'){
+                                        if (str.charAt(c) == 'r') {
                                             s = State.R;
-                                        }else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
+                                        } else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
                                             s = State.INGHJLO;
                                         } else if (str.charAt(c) >= '0' && str.charAt(c) <= '9') {
                                             s = State.KNGHJLO;
                                         } else if (str.charAt(c) == '_') {
                                             s = State.MNGHJLO;
-                                        }
-                                        else {
+                                        } else {
                                             s = State.REJECT;
                                         }
-                                    break;
+                                        break;
                                     case R:
-                                        if(str.charAt(c) >= 'i'){
+                                        if (str.charAt(c) == 'i') {
                                             s = State.I;
-                                        }else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
+                                        } else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
                                             s = State.INGHJLO;
                                         } else if (str.charAt(c) >= '0' && str.charAt(c) <= '9') {
                                             s = State.KNGHJLO;
                                         } else if (str.charAt(c) == '_') {
                                             s = State.MNGHJLO;
-                                        }
-                                        else {
+                                        } else {
                                             s = State.REJECT;
                                         }
-                                    break;
+                                        break;
                                     case I:
-                                        if(str.charAt(c) >= 'N'){
+                                        if (str.charAt(c) == 'n') {
                                             s = State.N;
-                                        }else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
+                                        } else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
                                             s = State.INGHJLO;
                                         } else if (str.charAt(c) >= '0' && str.charAt(c) <= '9') {
                                             s = State.KNGHJLO;
                                         } else if (str.charAt(c) == '_') {
                                             s = State.MNGHJLO;
-                                        }
-                                        else {
+                                        } else {
                                             s = State.REJECT;
                                         }
-                                    break;
+                                        break;
                                     case N:
-                                        if(str.charAt(c) >= 'T'){
+                                        if (str.charAt(c) == 't') {
                                             s = State.T;
-                                        }else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
+                                        } else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
                                             s = State.INGHJLO;
                                         } else if (str.charAt(c) >= '0' && str.charAt(c) <= '9') {
                                             s = State.KNGHJLO;
                                         } else if (str.charAt(c) == '_') {
                                             s = State.MNGHJLO;
-                                        }
-                                        else {
+                                        } else {
                                             s = State.REJECT;
                                         }
-                                    break;
+                                        break;
                                     case T:
-                                        if(str.charAt(c) >= '(' ){
-                                            s = State.PLCOMMA;
-                                        }else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
+                                        if (str.charAt(c) == '(') {
+                                            s = State.POPENPAR;
+                                            tokens.add(Token.PRINT);
+                                            tokens.add(Token.OPENPAR);
+                                        } else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
                                             s = State.INGHJLO;
                                         } else if (str.charAt(c) >= '0' && str.charAt(c) <= '9') {
                                             s = State.KNGHJLO;
                                         } else if (str.charAt(c) == '_') {
                                             s = State.MNGHJLO;
-                                        }
-                                        else {
+                                        } else {
                                             s = State.REJECT;
                                         }
-                                    break;
-                                    case PLCOMMA:
-                                        
-                                    break;
+                                        break;
+                                    case POPENPAR:
+                                        if (str.charAt(c) == ')') {
+                                            s = State.PCLOSEPAR;
+                                            tokens.add(Token.CLOSEPAR);
+                                        } else {
+                                            s = State.PCONTENT;
+                                        }
+                                        break;
+                                    case PCONTENT:
+                                        if (str.charAt(c) == ')') {
+                                            s = State.PCLOSEPAR;
+                                            tokens.add(Token.CLOSEPAR);
+                                        } else {
+                                            s = State.PCONTENT;
+                                        }
+                                        break;
+                                    case PCLOSEPAR:
+                                        if (str.charAt(c) == ';') {
+                                            s = State.PACCEPT;
+                                            tokens.add(Token.SEMICOLON);
+                                        } else {
+                                            s = State.REJECT;
+                                        }
+                                        break;
                                 }
                             }
-                            if (s == State.NACCEPT1 || s == State.NACCEPT2 || s == State.NACCEPT3 || s == State.NACCEPT4 || s == State.NACCEPT5) {
-                                tokens.add(Token.NUMLIT);
-                                s = State.END;
-                            } else if (s == State.CFGHJLO || s == State.EFGHJLO || s == State.INGHJLO || s == State.KNGHJLO || s == State.MNGHJLO){
-                                tokens.add(Token.IDENT);
-                                s = State.END;
+                            switch (s) {
+                                case NACCEPT1:
+                                case NACCEPT2:
+                                case NACCEPT3:
+                                case NACCEPT4:
+                                case NACCEPT5:
+                                    tokens.add(Token.NUMLIT);
+                                    s = State.END;
+                                    break;
+                                case CFGHJLO:
+                                case EFGHJLO:
+                                case INGHJLO:
+                                case KNGHJLO:
+                                case MNGHJLO:
+                                    tokens.add(Token.IDENT);
+                                    s = State.END;
+                                    break;
+                                case PACCEPT:
+                                    s = State.END;
+                                    break;
+                                default:
+                                    break;
                             }
                             continue;
+
                     }
                 }
             }
