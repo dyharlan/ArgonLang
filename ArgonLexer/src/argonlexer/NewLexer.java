@@ -36,8 +36,15 @@ enum State {
     I,
     N,
     T,
+    PF,
+    PL,
+    PN,
+    PE,
+    PR1,
+    PR2,
     PCONTENT,
     PQUOT,
+    PCLOSEPAR,
     STARTCOMMENT,
     ENDCOMMENT,
     ASTERISK,
@@ -134,6 +141,9 @@ public class NewLexer {
 //                if(s == State.END){
 //                    s = State.START;
 //                }
+                if(str.charAt(c) == ' ' && s != State.T){
+                    continue;
+                }
                 switch (s) {
                     case START: //start state of literals
                         //check if it is a number
@@ -333,7 +343,13 @@ public class NewLexer {
                         }
                         break;
                     case T:
-                        if(str.charAt(c) == '('){
+                        if( str.charAt(c) == 'e' ){
+                            s = State.PE;
+                        }else if( str.charAt(c) == 'f' ){
+                            s = State.PF;
+                        }else if( str.charAt(c) == 'l' ){
+                            s = State.PL;
+                        }else if(str.charAt(c) == '('){
                             s = State.PCONTENT;
                             tokens.add(Token.PRINT);
                             tokens.add(Token.OPENPAR);
@@ -347,10 +363,104 @@ public class NewLexer {
                             s = State.REJECT;
                         }
                         break;
+                    case PL:
+                        if(str.charAt(c) == 'n'){
+                            s = State.PN;
+                        }else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
+                            s = State.INGHJLO;
+                        } else if (str.charAt(c) >= '0' && str.charAt(c) <= '9') {
+                            s = State.KNGHJLO;
+                        } else if (str.charAt(c) == '_') {
+                            s = State.MNGHJLO;
+                        } else {
+                            s = State.REJECT;
+                        }
+                        break;
+                    case PN:
+                        if(str.charAt(c) == '('){
+                            s = State.PCONTENT;
+                            tokens.add(Token.PRINTLN);
+                            tokens.add(Token.OPENPAR);
+                        }else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
+                            s = State.INGHJLO;
+                        } else if (str.charAt(c) >= '0' && str.charAt(c) <= '9') {
+                            s = State.KNGHJLO;
+                        } else if (str.charAt(c) == '_') {
+                            s = State.MNGHJLO;
+                        } else {
+                            s = State.REJECT;
+                        }
+                        break;
+                    case PF:
+                        if(str.charAt(c) == '('){
+                            s = State.PCONTENT;
+                            tokens.add(Token.PRINTF);
+                            tokens.add(Token.OPENPAR);
+                        }else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
+                            s = State.INGHJLO;
+                        } else if (str.charAt(c) >= '0' && str.charAt(c) <= '9') {
+                            s = State.KNGHJLO;
+                        } else if (str.charAt(c) == '_') {
+                            s = State.MNGHJLO;
+                        } else {
+                            s = State.REJECT;
+                        }
+                        break;
+                    case PE:
+                        if(str.charAt(c) == 'r'){
+                            s = State.PR1;
+                        }else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
+                            s = State.INGHJLO;
+                        } else if (str.charAt(c) >= '0' && str.charAt(c) <= '9') {
+                            s = State.KNGHJLO;
+                        } else if (str.charAt(c) == '_') {
+                            s = State.MNGHJLO;
+                        } else {
+                            s = State.REJECT;
+                        }
+                        break;
+                    case PR1:
+                        if(str.charAt(c) == 'r'){
+                            s = State.PR2;
+                        }else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
+                            s = State.INGHJLO;
+                        } else if (str.charAt(c) >= '0' && str.charAt(c) <= '9') {
+                            s = State.KNGHJLO;
+                        } else if (str.charAt(c) == '_') {
+                            s = State.MNGHJLO;
+                        } else {
+                            s = State.REJECT;
+                        }
+                        break;
+                    case PR2:
+                        if(str.charAt(c) == '('){
+                            s = State.PCONTENT;
+                            tokens.add(Token.PRINTERR);
+                            tokens.add(Token.OPENPAR);
+                        }else if ((str.charAt(c) >= 'a' && str.charAt(c) <= 'z') || (str.charAt(c) >= 'A' && str.charAt(c) <= 'Z')) {
+                            s = State.INGHJLO;
+                        } else if (str.charAt(c) >= '0' && str.charAt(c) <= '9') {
+                            s = State.KNGHJLO;
+                        } else if (str.charAt(c) == '_') {
+                            s = State.MNGHJLO;
+                        } else {
+                            s = State.REJECT;
+                        }
+                        break;
                     case PCONTENT:
                         if(str.charAt(c) == ')'){
-                            s = State.START;
+                            s = State.PCLOSEPAR;
+                        }else{
+                            s = State.PCONTENT;
+                        }
+                        break;
+                    case PCLOSEPAR:
+                        if(str.charAt(c) == ')'){
+                            s = State.PCLOSEPAR;
+                        }else if(str.charAt(c) == ';'){
                             tokens.add(Token.CLOSEPAR);
+                            tokens.add(Token.SEMICOLON);
+                            s = State.START;
                         }else{
                             s = State.PCONTENT;
                         }
