@@ -73,10 +73,10 @@ enum Token {
     UMOLE64,
     NOT,
     OR,
-    PRINT,
-    PRINTF,
-    PRINTLN,
-    PRINTERR,
+    PRINT, //DONE
+    PRINTF, //DONE
+    PRINTLN, //DONE
+    PRINTERR, //DONE
     REACTIVE,
     TITRATE,
     ASSIGN,
@@ -97,16 +97,16 @@ enum Token {
     LT,
     LTE,
     COMMA,
-    SEMICOLON,
-    OPENPAR,
-    CLOSEPAR,
+    SEMICOLON, //useable
+    OPENPAR, //useable
+    CLOSEPAR, //useable
     OPENBR,
     CLOSEBR,
-    COMMENT,
-    OPENMULTILINECOMMENT,
-    CLOSEMULTILINECOMMENT,
-    NUMLIT,
-    IDENT
+    COMMENT, //DONE
+    OPENMULTILINECOMMENT, //DONE
+    CLOSEMULTILINECOMMENT, //DONE
+    NUMLIT, //DONE
+    IDENT //DONE
 
 }
 
