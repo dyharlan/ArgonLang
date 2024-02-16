@@ -19,7 +19,7 @@ public class Main {
      */
    public static void main(String[] args) {
         // TODO code application logic here
-        Lexer lex = new Lexer();
+        NewLexer lex = new NewLexer();
         if (args.length > 0) {
             try {
                 lex.Analyze(new File(args[0]));
