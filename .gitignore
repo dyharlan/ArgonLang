@@ -27,3 +27,6 @@ ArgonLexer/dist/input.txt
 ArgonLexer/dist/README.TXT
 ArgonLexer/nbproject/private/private.properties
 ArgonLexer/nbproject/private/private.xml
+/ArgonLexer/nbproject/private/
+/ArgonLexer/build/
+/ArgonLexer/dist/
